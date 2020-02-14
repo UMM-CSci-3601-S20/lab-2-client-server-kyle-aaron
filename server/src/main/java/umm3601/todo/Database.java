@@ -38,7 +38,7 @@ public class Database {
    * @return the todo with the given ID, or null if there is no todo with that ID
    */
   public Todo getTodo(String id) {
-    return Arrays.stream(allTodos).filter(x -> x.id.equals(id)).findFirst().orElse(null);
+    return Arrays.stream(allTodos).filter(x -> x._id.equals(id)).findFirst().orElse(null);
   }
 
   /**
@@ -51,17 +51,31 @@ public class Database {
     Todo[] filteredTodos = allTodos;
 
     // Filter ID if defined
-    if (queryParams.containsKey("ID")) {
-      String targetID = queryParams.get("ID").get(0);
+    if (queryParams.containsKey("_id")) {
+      String targetID = queryParams.get("_id").get(0);
       filteredTodos = filterTodosByID(filteredTodos, targetID);
+    }
+    // Filter owner if defined
+    if (queryParams.containsKey("owner")){
+      String targetOwner = queryParams.get("owner").get(0);
+      filteredTodos = filterTodosByOwner(filteredTodos, targetOwner);
     }
     // Filter status if defined
     if (queryParams.containsKey("status")) {
       boolean targetStatus = Boolean.parseBoolean(queryParams.get("status").get(0));
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
-    // Process other query parameters here...
-
+    // Filter body if defined
+    if (queryParams.containsKey("body")){
+      String targetBody = queryParams.get("body").get(0);
+      filteredTodos = filterTodosByBody(filteredTodos, targetBody);
+    }
+    // Filter category if defined
+    if (queryParams.containsKey("category")){
+      String targetCategory = queryParams.get("category").get(0);
+      filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
+    }
+       
     return filteredTodos;
   }
   /**
@@ -73,7 +87,18 @@ public class Database {
    *         ID
    */
   public Todo[] filterTodosByID(Todo[] todos, String targetID) {
-    return Arrays.stream(todos).filter(x -> x.id.equals(targetID)).toArray(Todo[]::new);
+    return Arrays.stream(todos).filter(x -> x._id.equals(targetID)).toArray(Todo[]::new);
+  }
+/**
+   * Get an array of all the todos having the target owner.
+   *
+   * @param todos         the list of todos to filter by owner
+   * @param targetOwner the target owner to look for
+   * @return an array of all the todos from the given list that have the target
+   *         owner
+   */
+  public Todo[] filterTodosByOwner(Todo[] todos, String targetOwner) {
+    return Arrays.stream(todos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
   /**
@@ -86,6 +111,30 @@ public class Database {
    */
   public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
     return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+  }
+
+/**
+   * Get an array of all the todos having the target body.
+   *
+   * @param todos         the list of todos to filter by body
+   * @param targetBody the target body to look for
+   * @return an array of all the todos from the given list that have the target
+   *         body
+   */
+  public Todo[] filterTodosByBody(Todo[] todos, String targetBody) {
+    return Arrays.stream(todos).filter(x -> x.body.equals(targetBody)).toArray(Todo[]::new);
+  }
+
+  /**
+   * Get an array of all the todos having the target category.
+   *
+   * @param todos         the list of todos to filter by category
+   * @param targetCategory the target category to look for
+   * @return an array of all the todos from the given list that have the target
+   *         category
+   */
+  public Todo[] filterTodosByCategory(Todo[] todos, String targetCategory) {
+    return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
   }
 
 }
