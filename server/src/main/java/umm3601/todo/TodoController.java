@@ -6,7 +6,7 @@ import io.javalin.http.NotFoundResponse;
 /**
  * Controller that manages requests for info about users.
  */
-public class TodosController {
+public class TodoController {
 
   private Database database;
 
@@ -19,7 +19,7 @@ public class TodosController {
    *
    * @param database the `Database` containing user data
    */
-  public TodosController(Database database) {
+  public TodoController(Database database) {
     this.database = database;
   }
 
