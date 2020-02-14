@@ -11,8 +11,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests umm3601.user.Database listUsers with _age_ and _company_ query
- * parameters
+ * Tests umm3601.todo.Database listTodos with multiple parameters
  */
 public class FilterTodosByCombinedFiltersFromDB {
 
