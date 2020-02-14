@@ -110,7 +110,7 @@ public class TodoControllerSpec {
 
   @Test
   public void GET_to_request_todo_with_existent_id() throws IOException {
-    when(ctx.pathParam("_id", String.class)).thenReturn(new Validator<String>("58895985a22c04e761776d54", ""));
+    when(ctx.pathParam("id", String.class)).thenReturn(new Validator<String>("58895985a22c04e761776d54", ""));
     todoController.getTodo(ctx);
     verify(ctx).status(201);
   }
