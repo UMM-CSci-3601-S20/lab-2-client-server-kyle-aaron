@@ -45,6 +45,9 @@ public class Server {
     // List users, filtered using query parameters
     server.get("api/users", ctx -> userController.getUsers(ctx));
     server.get("api/todos", ctx -> todoController.getTodos(ctx));
+
+    // Limit todos
+    server.get("api/todos?limit=?")
   }
 
   /***
