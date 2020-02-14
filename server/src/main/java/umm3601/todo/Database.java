@@ -1,4 +1,4 @@
-package umm3601.todos;
+package umm3601.todo;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

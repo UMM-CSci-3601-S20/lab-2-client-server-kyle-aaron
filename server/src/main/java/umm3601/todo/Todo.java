@@ -1,4 +1,4 @@
-package umm3601.todos;
+package umm3601.todo;
 
 public class Todo {
 

@@ -1,4 +1,4 @@
-package umm3601.todos;
+package umm3601.todo;
 
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
