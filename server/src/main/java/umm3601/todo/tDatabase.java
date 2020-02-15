@@ -3,6 +3,7 @@ package umm3601.todo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+//import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -62,12 +63,19 @@ public class tDatabase {
     }
     // Filter status if defined
     if (queryParams.containsKey("status")) {
-      boolean targetStatus = Boolean.parseBoolean(queryParams.get("status").get(0));
+      boolean targetStatus = true;
+      String targetStatusStr = queryParams.get("status").get(0);
+      if(targetStatusStr.equals("complete")) {
+        targetStatus = true;
+      }
+      else{
+       targetStatus = false;
+      }
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
     // Filter body if defined
-    if (queryParams.containsKey("body")){
-      String targetBody = queryParams.get("body").get(0);
+    if (queryParams.containsKey("contains")){
+      String targetBody = queryParams.get("contains").get(0);
       filteredTodos = filterTodosByBody(filteredTodos, targetBody);
     }
     // Filter category if defined
@@ -80,6 +88,12 @@ public class tDatabase {
       int targetLimit = Integer.parseInt(queryParams.get("limit").get(0));
       filteredTodos = filterTodosByLimit(filteredTodos, targetLimit);
     }
+
+    /*Sort by selected sort
+    if(queryParams.containsKey("orderBy")){
+      String targetOrder = queryParams.get("orderBy").get(0);
+      filteredTodos = filterTodosByOrder(filteredTodos, targetOrder);
+    }*/
 
     return filteredTodos;
   }
@@ -154,4 +168,7 @@ public class tDatabase {
     return Arrays.copyOfRange(Arrays.stream(todos).toArray(Todo[]::new), 0, targetLimit);
   }
 
+ /* public Todo[] filterTodosByOrder(Todo[] todos, String targetOrder){
+    return Arrays.;
+  }*/
 }

@@ -49,6 +49,9 @@ public class Server {
 
     // Limit todos
     server.get("api/todos/:limit", ctx -> todoController.getTodos(ctx));
+
+    // Get todos by status
+    server.get("api/todos/:status", ctx -> todoController.getTodos(ctx));
   }
 
   /***
