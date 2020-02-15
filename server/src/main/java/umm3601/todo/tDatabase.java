@@ -70,13 +70,13 @@ public class tDatabase {
 
     // Filter status if defined
     if (queryParams.containsKey("status")) {
+      boolean targetStatus = true;
       String targetStatusStr = queryParams.get("status").get(0);
-      Boolean targetStatus = null;
-      if (targetStatusStr.equals("complete")) {
+      if(targetStatusStr.equals("complete")) {
         targetStatus = true;
       }
-      else {
-        targetStatus = false;
+      else{
+       targetStatus = false;
       }
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
