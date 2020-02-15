@@ -3,6 +3,8 @@ package umm3601.todo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,10 @@ import com.google.gson.Gson;
 public class tDatabase {
 
   private Todo[] allTodos;
+  private OwnerComparator ownerComparator = new OwnerComparator();
+  private StatusComparator statusComparator = new StatusComparator();
+  private BodyComparator bodyComparator = new BodyComparator();
+  private CategoryComparator categoryComparator = new CategoryComparator();
 
   public tDatabase(String todoDataFile) throws IOException {
     Gson gson = new Gson();
@@ -55,41 +61,72 @@ public class tDatabase {
       String targetID = queryParams.get("_id").get(0);
       filteredTodos = filterTodosByID(filteredTodos, targetID);
     }
+
     // Filter owner if defined
     if (queryParams.containsKey("owner")){
       String targetOwner = queryParams.get("owner").get(0);
       filteredTodos = filterTodosByOwner(filteredTodos, targetOwner);
     }
+
     // Filter status if defined
     if (queryParams.containsKey("status")) {
-      boolean targetStatus = Boolean.parseBoolean(queryParams.get("status").get(0));
+      String targetStatusStr = queryParams.get("status").get(0);
+      Boolean targetStatus = null;
+      if (targetStatusStr.equals("complete")) {
+        targetStatus = true;
+      }
+      else {
+        targetStatus = false;
+      }
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
+
     // Filter body if defined
-    if (queryParams.containsKey("body")){
-      String targetBody = queryParams.get("body").get(0);
+    if (queryParams.containsKey("contains")){
+      String targetBody = queryParams.get("contains").get(0);
       filteredTodos = filterTodosByBody(filteredTodos, targetBody);
     }
+
     // Filter category if defined
     if (queryParams.containsKey("category")){
       String targetCategory = queryParams.get("category").get(0);
       filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
     }
+
     //Filter number of todos if defined
     if (queryParams.containsKey("limit")){
       int targetLimit = Integer.parseInt(queryParams.get("limit").get(0));
       filteredTodos = filterTodosByLimit(filteredTodos, targetLimit);
     }
-
+    
+    // Filter by orderBy if defined
+    if (queryParams.containsKey("orderBy")){
+      String targetOrder = queryParams.get("orderBy").get(0).toString();
+      filteredTodos = filterTodosByOrder(filteredTodos, targetOrder);
+    }
+    
+    // Filter out null values, if present
+    filteredTodos = filterNullValues(filteredTodos);    
+    
     return filteredTodos;
   }
+  
+  /**
+   * Get an array of all the todos with null values removed.
+   *
+   * @param todos    the list of todos to filter null from
+   * @return an array of all the todos from the given list void of all null values
+   */
+  private Todo[] filterNullValues(Todo[] filteredTodos) {
+    return Arrays.stream(filteredTodos).filter(x -> x != null).toArray(Todo[]::new);
+  }
+
   /**
    * Get an array of all the todos having the target ID.
    *
-   * @param todos     the list of todos to filter by ID
+   * @param todos    the list of todos to filter by ID
    * @param targetID the target ID to look for
-   * @return an array of all the todos from the given list that have the target
-   *         ID
+   * @return an array of all the todos from the given list that have the target ID
    */
   public Todo[] filterTodosByID(Todo[] todos, String targetID) {
     return Arrays.stream(todos).filter(x -> x._id.equals(targetID)).toArray(Todo[]::new);
@@ -154,4 +191,90 @@ public class tDatabase {
     return Arrays.copyOfRange(Arrays.stream(todos).toArray(Todo[]::new), 0, targetLimit);
   }
 
+  /**
+   * Get an array of the limit size.
+   *
+   * @param todos         the list of todos to filter by limit
+   * @param targetLimit the target limit
+   * @return an array of the limit size
+   *
+   */
+  public Todo[] filterTodosByOrder(Todo[] todos, String targetOrder) {
+    switch(targetOrder) {
+      case "owner": 
+        Arrays.sort(todos, ownerComparator);
+        return todos;
+          
+      case "status":
+        Arrays.sort(todos, statusComparator);
+        return todos;
+     
+      case "body":
+        Arrays.sort(todos, bodyComparator);
+        return todos;
+
+      case "category":
+        Arrays.sort(todos, categoryComparator);
+        return todos;
+      
+      default:
+        return todos;
+    }
+  }
+
+  private class OwnerComparator implements Comparator<Todo> {
+
+    @Override
+    public int compare(Todo o1, Todo o2) {
+      int returnValue = o1.owner.compareTo(o2.owner);
+      return returnValue;
+    }
+    
+  }
+
+  private class StatusComparator implements Comparator<Todo> {
+
+    @Override
+    public int compare(Todo o1, Todo o2) {
+      String o1Status, o2Status;
+      if (o1.status == true) {
+        o1Status = "true";
+      }
+      else {
+        o1Status = "false";
+      }
+
+      if (o2.status == true) {
+        o2Status = "true";
+      }
+      else {
+        o2Status = "false";
+      }
+
+      int returnValue = o1Status.compareTo(o2Status);
+      return returnValue;
+    }
+    
+  }
+
+  private class BodyComparator implements Comparator<Todo> {
+
+    @Override
+    public int compare(Todo o1, Todo o2) {
+      int returnValue = o1.body.compareTo(o2.body);
+      return returnValue;
+    }
+    
+  }
+
+  private class CategoryComparator implements Comparator<Todo> {
+
+    @Override
+    public int compare(Todo o1, Todo o2) {
+      int returnValue = o1.category.compareTo(o2.category);
+      return returnValue;
+    }
+    
+  }
+  
 }

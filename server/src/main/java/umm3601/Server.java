@@ -39,16 +39,14 @@ public class Server {
 
     // API endpoints
 
-    // Get specific user
-    server.get("api/users/:id", ctx -> userController.getUser(ctx));
-    server.get("api/todos/:id", ctx -> todoController.getTodo(ctx));
-
-    // List users, filtered using query parameters
+    // User endpoints
     server.get("api/users", ctx -> userController.getUsers(ctx));
-    server.get("api/todos", ctx -> todoController.getTodos(ctx));
+    server.get("api/users/:id", ctx -> userController.getUser(ctx));
 
-    // Limit todos
-    server.get("api/todos/:limit", ctx -> todoController.getTodos(ctx));
+    // Todo endpoints
+    server.get("api/todos", ctx -> todoController.getTodos(ctx));
+    server.get("api/todos/:id", ctx -> todoController.getTodo(ctx));
+    
   }
 
   /***

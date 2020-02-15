@@ -7,4 +7,6 @@ public class Todo {
   public boolean status;
   public String body;
   public String category;
+
 }
+
