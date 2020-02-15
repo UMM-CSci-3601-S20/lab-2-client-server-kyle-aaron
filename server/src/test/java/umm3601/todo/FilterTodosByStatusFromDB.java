@@ -10,18 +10,18 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import umm3601.todo.Database;
+import umm3601.todo.tDatabase;
 import umm3601.todo.Todo;
 
 /**
- * Tests umm3601.Todo.Database filterTodosByStatus and listTodos with status query
+ * Tests umm3601.Todo.tDatabase filterTodosByStatus and listTodos with status query
  * parameters
  */
 public class FilterTodosByStatusFromDB {
 
   @Test
   public void filterTodosByStatus() throws IOException {
-    Database db = new Database("/todos.json");
+    tDatabase db = new tDatabase("/todos.json");
     Todo[] allTodos = db.listTodos(new HashMap<>());
 
     Todo[] statusTrueTodos = db.filterTodosByStatus(allTodos, true);
@@ -33,7 +33,7 @@ public class FilterTodosByStatusFromDB {
 
   @Test
   public void listTodosWithStatusFilter() throws IOException {
-    Database db = new Database("/todos.json");
+    tDatabase db = new tDatabase("/todos.json");
     Map<String, List<String>> queryParams = new HashMap<>();
 
     queryParams.put("status", Arrays.asList(new String[] { "true" }));
@@ -49,6 +49,6 @@ public class FilterTodosByStatusFromDB {
     queryParams.clear();
     Todo[] totalTodos = db.listTodos(queryParams);
     assertEquals(totalTodos.length, statusTrueTodosLength + statusFalseTodosLength, "Incorrect database entry total");
-    
+
   }
 }

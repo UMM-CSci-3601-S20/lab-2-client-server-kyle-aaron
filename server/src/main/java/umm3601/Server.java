@@ -4,9 +4,10 @@ import java.io.IOException;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import umm3601.todo.tDatabase;
 import umm3601.todo.TodoController;
-import umm3601.user.Database;
 import umm3601.user.UserController;
+import umm3601.user.Database;
 
 public class Server {
 
@@ -14,7 +15,7 @@ public class Server {
   public static final String USER_DATA_FILE = "/users.json";
   public static final String TODO_DATA_FILE = "/todos.json";
   private static Database userDatabase;
-  private static umm3601.todo.Database todoDatabase;
+  private static tDatabase todoDatabase;
 
   public static void main(String[] args) {
 
@@ -47,7 +48,7 @@ public class Server {
     server.get("api/todos", ctx -> todoController.getTodos(ctx));
 
     // Limit todos
-    server.get("api/todos?limit=?")
+    server.get("api/todos/:limit", ctx -> todoController.getTodos(ctx));
   }
 
   /***
@@ -87,7 +88,7 @@ public class Server {
     TodoController todoController = null;
 
     try {
-      todoDatabase = new umm3601.todo.Database(TODO_DATA_FILE);
+      todoDatabase = new tDatabase(TODO_DATA_FILE);
       todoController = new TodoController(todoDatabase);
     } catch (IOException e) {
       System.err.println("The server failed to load the user data; shutting down.");

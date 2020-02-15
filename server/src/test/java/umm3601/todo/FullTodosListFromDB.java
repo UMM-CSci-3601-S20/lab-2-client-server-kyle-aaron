@@ -14,14 +14,14 @@ public class FullTodosListFromDB {
 
   @Test
   public void totalTodoCount() throws IOException {
-    Database db = new Database("/todos.json");
+    tDatabase db = new tDatabase("/todos.json");
     Todo[] allTodos = db.listTodos(new HashMap<>());
     assertEquals(300, allTodos.length, "Incorrect total number of todos");
   }
 
   @Test
   public void firstTodoInFullList() throws IOException {
-    Database db = new Database("/todos.json");
+    tDatabase db = new tDatabase("/todos.json");
     Todo[] allTodos = db.listTodos(new HashMap<>());
     Todo firstTodo = allTodos[0];
     assertEquals("58895985a22c04e761776d54", firstTodo._id, "Incorrect id");

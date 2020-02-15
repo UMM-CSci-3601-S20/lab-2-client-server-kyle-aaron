@@ -17,7 +17,7 @@ public class FilterTodosByCombinedFiltersFromDB {
 
   @Test
   public void listTodosWithCombinedFilters() throws IOException {
-    Database db = new Database("/todos.json");
+    tDatabase db = new tDatabase("/todos.json");
     Map<String, List<String>> queryParams = new HashMap<>();
 
     queryParams.put("_id", Arrays.asList(new String[] { "58895985c1849992336c219b" }));

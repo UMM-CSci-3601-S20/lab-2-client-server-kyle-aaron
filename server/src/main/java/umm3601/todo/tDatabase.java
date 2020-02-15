@@ -16,11 +16,11 @@ import com.google.gson.Gson;
  * then provide various database-like methods that allow the `TodoController` to
  * "query" the "database".
  */
-public class Database {
+public class tDatabase {
 
   private Todo[] allTodos;
 
-  public Database(String todoDataFile) throws IOException {
+  public tDatabase(String todoDataFile) throws IOException {
     Gson gson = new Gson();
     InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(todoDataFile));
     allTodos = gson.fromJson(reader, Todo[].class);
@@ -75,7 +75,12 @@ public class Database {
       String targetCategory = queryParams.get("category").get(0);
       filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
     }
-       
+    //Filter number of todos if defined
+    if (queryParams.containsKey("limit")){
+      int targetLimit = Integer.parseInt(queryParams.get("limit").get(0));
+      filteredTodos = filterTodosByLimit(filteredTodos, targetLimit);
+    }
+
     return filteredTodos;
   }
   /**
@@ -122,7 +127,7 @@ public class Database {
    *         body
    */
   public Todo[] filterTodosByBody(Todo[] todos, String targetBody) {
-    return Arrays.stream(todos).filter(x -> x.body.equals(targetBody)).toArray(Todo[]::new);
+    return Arrays.stream(todos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
   }
 
   /**
@@ -135,6 +140,18 @@ public class Database {
    */
   public Todo[] filterTodosByCategory(Todo[] todos, String targetCategory) {
     return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
+  }
+
+  /**
+   * Get an array of the limit size.
+   *
+   * @param todos         the list of todos to filter by limit
+   * @param targetLimit the target limit
+   * @return an array of the limit size
+   *
+   */
+  public Todo[] filterTodosByLimit(Todo[] todos, int targetLimit) {
+    return Arrays.copyOfRange(Arrays.stream(todos).toArray(Todo[]::new), 0, targetLimit);
   }
 
 }

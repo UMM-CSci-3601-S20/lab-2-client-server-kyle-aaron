@@ -32,13 +32,13 @@ public class TodoControllerSpec {
   private Context ctx = mock(Context.class);
 
   private TodoController todoController;
-  private static Database db;
+  private static tDatabase db;
 
   @BeforeEach
   public void setUp() throws IOException {
     ctx.clearCookieStore();
 
-    db = new Database(Server.TODO_DATA_FILE);
+    db = new tDatabase(Server.TODO_DATA_FILE);
     todoController = new TodoController(db);
   }
 
